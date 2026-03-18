@@ -18,6 +18,7 @@ const float COOL_THRESHOLD = 40.0;   // Above this the system will cool
 
 void setup() {
   lcd.begin(16, 2);          // start LCD screen
+  Serial.begin(9600); // Enable logging
   lcd.print("System Start...");
   delay(1500);
   lcd.clear();
@@ -54,6 +55,12 @@ void loop() {
     lcd.setCursor(0, 1);
   lcd.print("State: ");
   lcd.print(state + "   ");
+  
+  // --- Serial Logging to PC ---
+  Serial.print("Temp: ");
+  Serial.print(temperatureC);
+  Serial.print(" C | State: ");
+  Serial.println(state);
 
-  delay(250); // update twice per second
+  delay(250); // update 4 times per second
 }
