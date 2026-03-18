@@ -55,5 +55,5 @@ void loop() {
   lcd.print("State: ");
   lcd.print(state + "   ");
 
-  delay(500); // update twice per second
+  delay(250); // update twice per second
 }
