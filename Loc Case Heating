@@ -1,1 +1,59 @@
+#include <LiquidCrystal.h>
 
+// --- LCD Wiring ---
+// RS = 12
+// E  = 11
+// D4 = 5
+// D5 = 4
+// D6 = 3
+// D7 = 2
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+// TMP36 connected to A0
+const int tempPin = A0;
+
+// Temperature limits
+const float HEAT_THRESHOLD = 19.0;   // Below this the system will heat
+const float COOL_THRESHOLD = 40.0;   // Above this the system will cool
+
+void setup() {
+  lcd.begin(16, 2);          // start LCD screen
+  lcd.print("System Start...");
+  delay(1500);
+  lcd.clear();
+}
+
+void loop() {
+  // ---- Read Temp Sensor Value ----
+  int sensorValue = analogRead(tempPin);
+  
+  // Convert Temp reading to voltage
+  float voltage = sensorValue * (5.0 / 1023.0);
+
+  // Temp conversion:
+  // 0.5V = 0°C, +10mV per °C
+  float temperatureC = (voltage - 0.5) * 100.0;
+
+  // ---- Determine State ----
+ String state;
+  if (temperatureC < HEAT_THRESHOLD) {
+    state = "HEATING";
+  } else if (temperatureC > COOL_THRESHOLD) {
+    state = "COOLING";
+  } else {
+    state = "STABLE";
+  }
+
+  // ---- LCD Output ----
+  lcd.setCursor(0, 0);
+  lcd.print("Temp: ");
+  lcd.print(temperatureC, 1);   // 1 decimal place
+  lcd.print((char)223);         // degree symbol
+  lcd.print("C   ");
+
+    lcd.setCursor(0, 1);
+  lcd.print("State: ");
+  lcd.print(state + "   ");
+
+  delay(500); // update twice per second
+}
